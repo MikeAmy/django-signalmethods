@@ -22,6 +22,8 @@ With the when() decorator, they become even more powerful:
 Example:
 --------
 
+Simple asteroids game example follows, consider two classes:
+
     class Spaceship(object):
         def __init__(spaceship):
             spaceship.lives = 3
@@ -56,18 +58,19 @@ can even:
 
     spaceship.has_collided(asteroid)
 
-    rule = when(Spaceship.has_collided)(Spaceship.explode)
+With the when() decorator, we can configure our signal handling in a very readable way:
+
+    when(Spaceship.has_collided)(Spaceship.explode)
 
     responses = spaceship.has_collided(asteroid=asteroid)
 
-Boom!
-
-    rule.stop()
+Output: Boom!
 
 
-Multiple effects can be provided:
+Multiple receivers:
+-------------------
 
-    rule = when(Spaceship.has_collided)(
+    when(Spaceship.has_collided)(
         Spaceship.explode,
         spaceship.lose_life, # calling bound methods is OK
         Asteroid.destroy
@@ -75,10 +78,10 @@ Multiple effects can be provided:
 
     responses = spaceship.has_collided(asteroid=asteroid)
 
-Boom!
+Output: Boom!
+
 asteroid destroyed
 
-    rule.stop()
 
 More complex rules can be handled as a decorated function:
 
@@ -92,21 +95,27 @@ More complex rules can be handled as a decorated function:
     responses = spaceship.has_collided(asteroid=Asteroid())
     
 asteroid destroyed
-Boom!
 
-Note that non-kwyword arguments will be mapped to the correct name,
+Output: Boom!
+
+Note that non-keyword arguments will be mapped to the correct name,
 and that unneeded arguments are just ignored, and that no arguments
 are required (as they may have defaults, like make_noise.
 
     responses = spaceship.has_collided(Asteroid(), aliens=False)
 
 asteroid destroyed
-Boom!
+
+Output: Boom!
+
 Game Over
 
 Also note that if needed arguments are missing, the usual errors come through:
 
     responses = spaceship.has_collided()
 
+Output: 
+
 Traceback (most recent call last):
+
 TypeError: destroy_spaceship_and_asteroid() takes at least 2 arguments (1 given)
