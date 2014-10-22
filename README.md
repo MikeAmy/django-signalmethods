@@ -18,7 +18,9 @@ With the when() decorator, they become even more powerful:
 - receiver methods don't have to accept kwargs any more, so you can use more of your existing methods.
 - arguments sender and signal can be ignored by receivers.
 
-The goal of this package is to make it possible to have a list of cause-and-effect rules showing how parts of a django system are connected. These rule scan then be shown to someone who understand the 'business' side of what a website is supposed to do, and can check those rules.
+The goal of this package is to:
+- Make django's signal-handling more flexible, readable and fun.
+- Make it possible to have a list of cause-and-effect rules showing how parts of a django system are connected. These rules can then be shown to a non-programmer who understands the 'business' side of what a website is supposed to do, and can check those rules. Take a look at the when() examples.
 
 
 SignalMethod usage example:
@@ -76,11 +78,17 @@ With the when() decorator, we can configure our signal handling in a very readab
 
     when(Spaceship.has_collided)(Spaceship.explode)
 
+Anyone who understands English can understand such rules.
+
+Once this rule is in place, our Spaceship.has_collided signal method is connected to the method Spaceship.explode:
+
     responses = spaceship.has_collided(asteroid=asteroid)
 
 Output:
 
     Boom!
+
+Yay!
 
 Notes:
 
