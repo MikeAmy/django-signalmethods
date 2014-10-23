@@ -35,6 +35,7 @@ Notes:
 'sender' argument will be the class where the signal method is accessed.
 The first provided argument of the signal will take 'self' when the signal method is called.
 
+
     class Spaceship(object):
         def __init__(spaceship):
             spaceship.lives = 3
@@ -78,7 +79,7 @@ With the when() decorator, we can configure our signal handling in a very readab
 
     when(Spaceship.has_collided)(Spaceship.explode)
 
-Anyone who understands English can understand such rules.
+Easy for anyone to understand this rule.
 
 Once this rule is in place, our Spaceship.has_collided signal method is connected to the method Spaceship.explode:
 
@@ -96,13 +97,13 @@ Sole argument is a SignalMethod.
 This returns a callable that accepts functions that should be run with the passed arguments.
 Thus, note the two sets of parenthesis.
 
-Arguments passed will be matched to arguments in the receivers by name.
+Arguments passed will be matched to arguments in the receivers by name. So in this case, we wanted to use the 'asteroid' argument that was sent, as the 'self' argument of Asteroid.destroy. So, self was renamed as 'asteroid'. If 'self' or other argument names can't be changed, use when() to decorate a function that maps the argument as needed.
 
 Signal 'sender' argument will be the class from which the signal method was accessed.
 
 Supplying rule_id is recommended. It is used as the dispatch_uid.
 
-rule = when(Class.signal)(function,   ) returns a SignalHandlingRule.
+rule = when(Class.signal)(function,...) returns a SignalHandlingRule.
 
 rule.stop() will stop the rule.
 
