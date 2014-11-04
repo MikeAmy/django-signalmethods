@@ -59,21 +59,31 @@ __doc__ = """
     >>> rule.stop()
 
     More complex rules can be handled as a decorated function:
+    note that defaults can be supplied and these then are optional arguments.
     
     >>> @when(Spaceship.has_collided)
-    ... def destroy_spaceship_and_asteroid(spaceship, asteroid, make_noise=True):
+    ... def destroy_spaceship_and_asteroid(spaceship, asteroid=asteroid):
     ...     asteroid.destroy()
     ...     if not hasattr(spaceship, 'forcefield'):
     ...         spaceship.explode()
     ...         spaceship.lose_life()
 
-    >>> responses = spaceship.has_collided(asteroid=Asteroid())
+    >>> responses = spaceship.has_collided()
     asteroid destroyed
     Boom!
+
+    >>> destroy_spaceship_and_asteroid.stop()
 
     Note that non-kwyword arguments will be mapped to the correct name,
     and that unneeded arguments are just ignored, and that no arguments
     are required (as they may have defaults, like make_noise.
+    also **kwargs can be given, like django signal handlers mandate.
+
+    >>> @when(Spaceship.has_collided)
+    ... def destroy_spaceship_and_asteroid(spaceship, asteroid, make_noise=True, **kwargs):
+    ...     asteroid.destroy()
+    ...     spaceship.explode()
+    ...     spaceship.lose_life()
 
     >>> responses = spaceship.has_collided(Asteroid(), aliens=False)
     asteroid destroyed
@@ -202,11 +212,11 @@ class SignalHandlingRule(object):
     def __del__(rule):
         rule.stop()
 
-    def __call__(rule, function):
-        def wrapped_function_call(*args, **kwargs):
-            with rule:
-                return function(*args, **kwargs)
-        return wrapped_function_call
+#    def __call__(rule, function):
+#        def wrapped_function_call(*args, **kwargs):
+#            with rule:
+#                return function(*args, **kwargs)
+#        return wrapped_function_call
 
 
 def when(cause, rule_id=None):
@@ -233,7 +243,3 @@ def when(cause, rule_id=None):
         return rule
     return accept_effects
 
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
